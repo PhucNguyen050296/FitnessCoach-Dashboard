@@ -17,7 +17,7 @@ module.exports = {
           },
           fontFamily: {
             inter: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
-      }
+          }
     },
   },
   plugins: [],
