@@ -1,175 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fitness Coach Dashboard</title>
-  
-  <!-- Tailwind CSS CDN (for quick setup, replace with your build in production) -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitCoach Pro — Dashboard</title>
+
+  <!-- Quick Tailwind (dev). Replace with built css in production. -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Optional: Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  
+  <!-- Tailwind inline config for premium colors & fonts -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#4f46e5',
+              700: '#3730a3'
+            },
+            dark: {
+              900: '#0b1220',
+              800: '#0f1724'
+            }
+          },
+          fontFamily: {
+            inter: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <meta name="description" content="Premium Fitness Coach admin dashboard — sidebar, topbar, stats, charts, messages, leads." />
+  <style>
+    /* small visual polish for the demo (avoid heavy custom CSS; prefer Tailwind in production) */
+    .glass-blur { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); backdrop-filter: blur(6px); }
+  </style>
 </head>
-<body class="bg-gray-50">
 
-  <!-- Sidebar -->
-  <aside
-    id="sidebar"
-    class="fixed top-0 left-0 h-screen w-64 bg-white shadow-lg border-r border-gray-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50"
-  >
-    <!-- Logo / Brand -->
-    <div class="flex items-center justify-center h-20 border-b border-gray-200">
-      <span class="text-2xl font-bold text-indigo-600 tracking-wide">
-        FitCoach
-      </span>
-    </div>
+<body class="font-inter bg-gray-50 text-gray-800 antialiased">
 
-    <!-- Menu Items -->
-    <nav class="mt-6">
-      <ul class="space-y-2">
-        <!-- Dashboard (active) -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-700 bg-indigo-50 font-medium rounded-lg shadow-sm hover:bg-indigo-100 hover:text-indigo-700 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-indigo-600" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 12l2-2m0 0l7-7 7 7m-9 2v8" />
+  <!--
+    PRODUCTION NOTES:
+    - Replace CDN Tailwind with your built ./dist/output.css in production.
+    - Save this file as index.html at repository root (VERCEL requires index.html in root for static deploy).
+    - Assets: put images under /assets/images/ and icons under /assets/icons/
+    - See Assets README instructions at the bottom of this file (commented + separate note).
+  -->
+
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- ===========================
+         SIDEBAR (desktop only; toggled on mobile)
+         width: md:w-72 (~18rem) and lg:w-[26%] approximates 25-30%
+         =========================== -->
+    <aside id="sidebar"
+      class="fixed inset-y-0 left-0 z-30 hidden md:flex flex-col bg-dark-800 text-gray-200 border-r border-gray-800 shadow-xl
+             md:w-72 lg:w-[26%] transition-all duration-300">
+      <!-- Logo / header -->
+      <div class="px-6 py-5 border-b border-gray-800/60">
+        <a href="#" class="inline-flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-brand-500 to-brand-700 flex items-center justify-center shadow">
+            <!-- simple mark -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-white">
+              <path d="M4 12a8 8 0 1116 0 8 8 0 01-16 0z" fill="white" opacity="0.08"></path>
+              <path d="M7 12c1.5-3 3-4 5-4s3.5 1 5 4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
-            Dashboard
-          </a>
-        </li>
+          </div>
+          <div>
+            <div class="text-white font-semibold text-lg leading-tight">FitCoach Pro</div>
+            <div class="text-gray-400 text-xs">Enterprise Dashboard</div>
+          </div>
+        </a>
+      </div>
 
-        <!-- Leads -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 17v-2a4 4 0 014-4h4" />
-            </svg>
-            Leads
-          </a>
-        </li>
+      <!-- nav -->
+      <nav class="px-2 py-6 flex-1 overflow-y-auto">
+        <ul class="space-y-2">
+          <!-- Active -->
+          <li>
+            <a href="#"
+              class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gray-900/40 text-white text-sm font-medium shadow-sm">
+              <svg class="w-5 h-5 opacity-90" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"
+                stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v4h-7zM14 10h7v11h-7zM3 14h7v7H3z"></path></svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
 
-        <!-- Messages -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 8h10M7 12h4m-2 8a9 9 0 100-18 9 9 0 000 18z" />
-            </svg>
-            Messages
-          </a>
-        </li>
+          <!-- Secondary items -->
+          <li>
+            <a href="#leads"
+              class="group flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-200 hover:bg-gray-900/30 hover:text-white transition">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Leads</span>
+              <span class="ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-gray-800 text-gray-300">214</span>
+            </a>
+          </li>
 
-        <!-- Revenue -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8c-3.866 0-7 1.79-7 4s3.134 4 7 4 7-1.79 7-4-3.134-4-7-4z" />
-            </svg>
-            Revenue
-          </a>
-        </li>
+          <li>
+            <a href="#messages" class="group flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-200 hover:bg-gray-900/30 hover:text-white transition">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11.9-3.8z"></path><line x1="22" y1="22" x2="18" y2="18"></line>
+              </svg>
+              <span>Messages</span>
+            </a>
+          </li>
 
-        <!-- Analytics -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 17l-4-4m0 0l4-4m-4 4h12" />
-            </svg>
-            Analytics
-          </a>
-        </li>
+          <li>
+            <a href="#revenue" class="group flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-200 hover:bg-gray-900/30 hover:text-white transition">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1v22"></path><path d="M4 7h16M4 17h16"></path>
+              </svg>
+              <span>Revenue</span>
+            </a>
+          </li>
 
-        <!-- Settings -->
-        <li>
-          <a href="#"
-             class="flex items-center px-6 py-3 text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8c-1.333 0-2 .667-2 2s.667 2 2 2 2-.667 2-2-.667-2-2-2zM12 12v8" />
-            </svg>
-            Settings
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </aside>
+          <li>
+            <a href="#analytics" class="group flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-200 hover:bg-gray-900/30 hover:text-white transition">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 20h16M4 4v11"></path><path d="M8 16V8"></path><path d="M12 16v-4"></path><path d="M16 16v-8"></path>
+              </svg>
+              <span>Analytics</span>
+            </a>
+          </li>
 
-  <!-- Mobile Hamburger Button -->
-  <button id="sidebarToggle"
-          class="fixed top-4 left-4 z-50 md:hidden p-2 bg-white rounded-lg shadow-lg">
-    <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"/>
-    </svg>
-  </button>
+          <li>
+            <a href="#settings" class="group flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-200 hover:bg-gray-900/30 hover:text-white transition">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8a4 4 0 100 8 4 4 0 000-8z"></path><path d="M19.4 15a1.65 1.65 0 01.33 1.82"></path>
+              </svg>
+              <span>Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
-  <!-- Main Content Container -->
-  <div class="ml-0 md:ml-64 transition-all duration-300">
-    <!-- Topbar Placeholder -->
-    <header class="h-20 bg-white shadow-sm flex items-center justify-between px-6 border-b border-gray-200">
-      <div class="text-xl font-semibold text-gray-700">Dashboard</div>
-      <div class="flex items-center space-x-4">
-        <input type="text" placeholder="Search..."
-               class="hidden sm:block px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <button class="p-2 rounded-full hover:bg-gray-100 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 17h5l-1.405-1.405M19 13V8a7 7 0 10-14 0v5l-1.405 1.405" />
-          </svg>
-        </button>
-        <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-          <img src="https://via.placeholder.com/40" alt="User Avatar">
+      <!-- profile -->
+      <div class="px-5 py-4 border-t border-gray-800/60 flex items-center gap-3">
+        <img src="https://source.unsplash.com/80x80/?portrait" alt="Admin" class="w-11 h-11 rounded-full object-cover ring-1 ring-gray-700">
+        <div class="">
+          <div class="text-sm font-medium text-white">Coach Daniel</div>
+          <div class="text-xs text-gray-400">Administrator</div>
         </div>
       </div>
-    </header>
 
-    <!-- Scrollable Content Placeholder -->
-    <main class="p-6 h-screen overflow-y-auto bg-gray-50">
-      <h2 class="text-2xl font-semibold mb-4">Welcome, Coach!</h2>
-      <!-- Stats Cards Placeholder -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white shadow rounded-xl p-5">Stats Card 1</div>
-        <div class="bg-white shadow rounded-xl p-5">Stats Card 2</div>
-        <div class="bg-white shadow rounded-xl p-5">Stats Card 3</div>
-        <div class="bg-white shadow rounded-xl p-5">Stats Card 4</div>
-      </div>
+    </aside>
 
-      <!-- Charts Placeholder -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white shadow rounded-xl h-64">Revenue Chart</div>
-        <div class="bg-white shadow rounded-xl h-64">Lead Sources Chart</div>
-      </div>
+    <!-- ===========================
+         MAIN: topbar + content
+         =========================== -->
+    <div class="flex-1 flex flex-col min-w-0 md:pl-72 lg:pl-[26%] transition-all duration-300">
 
-      <!-- Messages Preview Placeholder -->
-      <div class="bg-white shadow rounded-xl p-5 mb-6">Messages Preview Section</div>
+      <!-- Topbar (sticky inside content area) -->
+      <header class="sticky top-0 z-20 bg-white/70 glass-blur backdrop-blur-sm border-b border-gray-200 flex items-center justify-between h-16 px-4 sm:px-6">
+        <div class="flex items-center gap-3">
+          <!-- Hamburger: visible only on mobile -->
+          <button id="mobileToggle" aria-controls="sidebar-mobile" aria-expanded="false"
+            class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white shadow-sm ring-1 ring-gray-100">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
 
-      <!-- Leads Table Placeholder -->
-      <div class="bg-white shadow rounded-xl p-5 mb-6">Leads Table Section</div>
+          <div>
+            <h1 class="text-lg font-semibold text-gray-800 leading-tight">Dashboard</h1>
+            <p class="text-xs text-gray-500">Overview & insights</p>
+          </div>
+        </div>
 
-      <!-- Coach Add-ons / Insights -->
-      <div class="bg-white shadow rounded-xl p-5">Add-ons / Insights Section</div>
-    </main>
+        <div class="flex items-center gap-3">
+          <label class="relative hidden sm:block">
+            <input type="search" placeholder="Search leads, clients..." aria-label="Search"
+              class="block w-64 pl-3 pr-3 py-2 border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle></svg>
+            </div>
+          </label>
+
+          <button class="p-2 rounded-lg hover:bg-gray-100 transition" title="Notifications">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round"><path d="M15 17h5l-1.405-1.405"></path><path d="M19 13V8a7 7 0 10-14 0v5l-1.405 1.405"></path></svg>
+          </button>
+
+          <!-- avatar -->
+          <div class="relative">
+            <button id="profileMenuBtn" class="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 transition">
+              <img src="https://source.unsplash.com/40x40/?person" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-1 ring-gray-200">
+              <span class="hidden sm:block text-sm font-medium text-gray-700">Daniel</span>
+            </button>
+            <!-- simple dropdown placeholder (aria) -->
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable content -->
+      <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <!-- Section 1: Stats (premium cards) -->
+        <section class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">Key metrics</h2>
+            <div class="text-sm text-gray-500">Updated 2m ago</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <!-- card 1 -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">New leads (7d)</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">214</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-brand-50">
+                  <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M3 12h18"></path><path d="M12 3v18"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-green-600 mt-3">+12% since last week</div>
+            </div>
+
+            <!-- card 2 -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">Conversion rate</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">42%</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-indigo-50">
+                  <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M12 8v8M8 12h8"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-red-500 mt-3">-2% since last month</div>
+            </div>
+
+            <!-- card 3 -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">New messages</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">18</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-amber-50">
+                  <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-green-600 mt-3">+3 new replies</div>
+            </div>
+
+            <!-- card 4 -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">Monthly revenue</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">$4,890</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-emerald-50">
+                  <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M12 8c-3 0-5 1.5-5 4s2 4 5 4 5-1.5 5-4-2-4-5-4z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-green-600 mt-3">+8% vs last month</div>
+            </div>
+
+            <!-- card 5 (Active clients) -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">Active clients</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">42</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-pink-50">
+                  <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-green-600 mt-3">Stable</div>
+            </div>
+
+            <!-- card 6 (New signups) -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-500">New signups</div>
+                  <div class="text-2xl font-semibold text-gray-800 mt-1">16</div>
+                </div>
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-sky-50">
+                  <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M12 5v14"></path><path d="M5 12h14"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text-xs text-green-600 mt-3">+5 today</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Charts (placeholders) -->
+        <section class="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 h-80 flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-medium text-gray-700">Revenue trend</h3>
+              <div class="text-xs text-gray-400">Monthly</div>
+            </div>
+            <div class="flex-1 grid place-items-center text-sm text-gray-400">[Line chart placeholder — integrate Chart.js]</div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 h-80 flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-medium text-gray-700">Lead sources</h3>
+              <div class="text-xs text-gray-400">Channels</div>
+            </div>
+            <div class="flex-1 grid place-items-center text-sm text-gray-400">[Bar / Pie chart placeholder]</div>
+          </div>
+        </section>
+
+        <!-- Section 3: Messages preview -->
+        <section class="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-medium text-gray-700">Recent messages</h3>
+              <a href="#messages" class="text-xs text-brand-500 hover:underline">View all</a>
+            </div>
+
+            <ul class="space-y-3">
+              <!-- message item -->
+              <li class="flex items-start gap-3">
+                <img src="https://source.unsplash.com/40x40/?face" alt="" class="w-9 h-9 rounded-full object-cover">
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-gray-800">Aisha K.</div>
+                      <div class="text-xs text-gray-500">Interested in 1:1 coaching</div>
+                    </div>
+                    <div class="text-xs text-gray-400">2h</div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <img src="https://source.unsplash.com/40x40/?woman" alt="" class="w-9 h-9 rounded-full object-cover">
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-gray-800">Marcus L.</div>
+                      <div class="text-xs text-gray-500">Question about pricing</div>
+                    </div>
+                    <div class="text-xs text-gray-400">5h</div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <img src="https://source.unsplash.com/40x40/?man" alt="" class="w-9 h-9 rounded-full object-cover">
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-gray-800">Sofia P.</div>
+                      <div class="text-xs text-gray-500">Ready to start next week</div>
+                    </div>
+                    <div class="text-xs text-gray-400">1d</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section 4: Leads table -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-medium text-gray-700">Leads</h3>
+              <a href="#leads" class="text-xs text-brand-500 hover:underline">Manage</a>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-sm">
+                <thead class="text-xs text-gray-500 border-b">
+                  <tr>
+                    <th class="py-3 text-left">Name</th>
+                    <th class="py-3 text-left">Status</th>
+                    <th class="py-3 text-left">Email</th>
+                    <th class="py-3 text-left">Joined</th>
+                    <th class="py-3 text-left">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y">
+                  <tr>
+                    <td class="py-3">Aisha K.</td>
+                    <td class="py-3"><span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-600">Contacted</span></td>
+                    <td class="py-3">aisha@example.com</td>
+                    <td class="py-3">Dec 1, 2025</td>
+                    <td class="py-3"><button class="text-sm text-brand-600 hover:underline">Open</button></td>
+                  </tr>
+                  <tr>
+                    <td class="py-3">Marcus L.</td>
+                    <td class="py-3"><span class="text-xs px-2 py-1 rounded-full bg-amber-50 text-amber-600">New</span></td>
+                    <td class="py-3">marcus@example.com</td>
+                    <td class="py-3">Nov 28, 2025</td>
+                    <td class="py-3"><button class="text-sm text-brand-600 hover:underline">Open</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 5: Add-ons / Insights -->
+        <section class="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">Upcoming sessions</h4>
+            <div class="text-sm text-gray-500">Mon · 10:00 — John S. (In-person)</div>
+            <div class="text-sm text-gray-500 mt-3">Tue · 14:00 — Group HIIT</div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">Quick tasks</h4>
+            <ul class="text-sm text-gray-500 space-y-2">
+              <li>- Reply to Marcus</li>
+              <li>- Approve new plan for Aisha</li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">Notes</h4>
+            <div class="text-sm text-gray-500">Add an onboarding workflow for nutrition clients.</div>
+          </div>
+        </section>
+
+        <!-- Footer (in content) -->
+        <footer class="text-xs text-gray-400 pt-6 pb-16">
+          © <span id="year"></span> FitCoach Pro — Built for premium clients. Layout by WebSync360.
+        </footer>
+      </main>
+    </div>
   </div>
 
-  <!-- Sidebar Toggle Script -->
+  <!-- ===========================
+       Mobile Sidebar (off-canvas)
+       =========================== -->
+  <div id="sidebar-mobile" class="fixed inset-0 z-40 md:hidden hidden">
+    <div id="mobileOverlay" class="absolute inset-0 bg-black/40"></div>
+    <div class="absolute inset-y-0 left-0 w-72 bg-dark-800 text-gray-200 p-4 overflow-y-auto">
+      <!-- small mobile header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-brand-700 flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12a8 8 0 1116 0 8 8 0 01-16 0z" fill="white" opacity="0.06"></path></svg>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-white">FitCoach Pro</div>
+            <div class="text-xs text-gray-400">Admin</div>
+          </div>
+        </div>
+        <button id="mobileClose" class="p-2 rounded-md text-gray-300 hover:bg-gray-900/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- mobile menu (same items as sidebar) -->
+      <nav class="space-y-2">
+        <a href="#" class="block px-3 py-2 rounded-md bg-gray-900/40 text-white">Dashboard</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-gray-900/30">Leads</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-gray-900/30">Messages</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-gray-900/30">Revenue</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-gray-900/30">Analytics</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-gray-900/30">Settings</a>
+      </nav>
+
+      <div class="mt-6 border-t border-gray-800/60 pt-4">
+        <div class="flex items-center gap-3">
+          <img src="https://source.unsplash.com/80x80/?portrait" alt="Admin" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <div class="text-sm text-white">Coach Daniel</div>
+            <div class="text-xs text-gray-400">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="src/script.js"></script>
 </body>
 </html>
